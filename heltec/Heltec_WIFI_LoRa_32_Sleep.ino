@@ -33,8 +33,8 @@ void greeting(){
   display.setTextAlignment(TEXT_ALIGN_LEFT);
   display.setFont(ArialMT_Plain_10);
 
-  if (wakeup_reason == 2) {
-    uint64_t mask = esp_sleep_get_ext1_wakeup_status();
+  uint64_t mask = esp_sleep_get_ext1_wakeup_status();
+  if (wakeup_reason == ESP_SLEEP_WAKEUP_EXT1) {
 
     if (mask & BUTTON_RED)
       display.drawString(0, 0, "Woken up by red button");
@@ -53,6 +53,9 @@ void greeting(){
 }
 
 void nap() {
+  pinMode(32, INPUT);
+  pinMode(33, INPUT);
+  pinMode(39, INPUT);
   esp_sleep_enable_ext1_wakeup(BUTTON_PIN_BITMASK, ESP_EXT1_WAKEUP_ANY_HIGH);
   esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
   esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_PERIPH, ESP_PD_OPTION_OFF);
