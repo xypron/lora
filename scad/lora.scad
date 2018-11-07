@@ -1,4 +1,4 @@
-$fn = 20;
+$fn = 60;
 
 /* wall thickness */
 wt = 1.5;
@@ -9,12 +9,12 @@ sp = .4;
 
 module device () {
 
-    module switch(x, y) {
+    module switch(x, y, c) {
     translate(v = [dx + 2.54 * x, dy + 2.54 * y, dz]) {
             color(c = [.2, .2, .2]) {
                 cube(size = [12.7, 12.7, 9.3], center = false);
             }   
-            color(c = [.8, .8, .8]) {
+            color(c = c) {
                 translate(v = [.5 * (12.7 - 10.2), .5 * (12.7 - 10.2), 9.3]) {
                     cube(size = [10.2, 10.2, 2.1], center = false);
                 }
@@ -28,7 +28,7 @@ module device () {
             for (i = [0: 18]) {
                 for (j = [0:34]) {
                     translate( v = [dx + 2.54 *i, dy + 2.54 * j, 0]) {
-                        cylinder(h = 10, r = .4, center = true);
+                        // cylinder(h = 10, r = .4, center = true);
                     }
                 }
             }
@@ -60,10 +60,10 @@ module device () {
     }
 
     platina();
-    switch(3, 2);
-    switch(10, 2);
-    switch(3, 9);
-    switch(10, 9);
+    switch(3, 2, [.3, .5, .8]);
+    switch(10, 2, [.8, .8, .8]);
+    switch(3, 9, [.3, .8, .3]);
+    switch(10, 9, [.8, 0, 0]);
     pinheader(0, 23);
     pinheader(0, 32);
     carrier(0, 23);
@@ -282,7 +282,7 @@ module top2() {
     }
 
     difference () {
-        /* lower top */
+        /* top */
         translate(v= [-.3 - sp - 2 * wt, -.3 -sp - 2 * wt, 9.4 + dz - wt]) {
             cube(size = [65.9 + 2 * sp + 5 * wt, 50.6 + sp + 2 * wt, wt], center = false);
         };
@@ -317,7 +317,7 @@ module top2() {
 
     /* middle wall */
     translate(v= [-.3 - sp - 2 * wt, 50.3 - wt, 5 + sp]) {
-        cube(size = [65.9 + 2 * sp + 5 * wt, wt, 4.4 -sp + dz ], center = false);
+        //cube(size = [65.9 + 2 * sp + 5 * wt, wt, 4.4 -sp + dz ], center = false);
     };
 
     /* support */
@@ -337,13 +337,8 @@ module top2() {
     };
     
     /* rear wall */
-    difference () {
-        translate(v= [-.3 - sp - 2 * wt, 90.3 + wt + sp, -9.3 - wt]) {
-            cube(size = [65.9 + 2 * sp + 5 * wt, wt, 18.7 + wt + dz], center = false);
-        };
-        translate(v = [30, -2.3 - wt, -.6 -sp + dz]) {
-            cube(size = [6, 98.4 + 2 * wt, 5], center = false);
-        }
+    translate(v= [-.3 - sp - 2 * wt, 90.3 + wt + sp, -9.3 - wt]) {
+        cube(size = [65.9 + 2 * sp + 5 * wt, wt, 18.7 + wt + dz], center = false);
     };
 
     /* side wall */
@@ -364,11 +359,9 @@ module top1() {
             cube(size = [13 * 2.54 + 2 * d, 8 * 2.54 + 2 * d , 30], center = false);
         }
     }
-    
-
 
     intersection () {
-        translate(v = [0, 0, 19.7 - wt]) {
+        translate(v = [0, 0, 20.7 - wt]) {
             cube(size = [100, 100, 3 + wt], center = false);
         };
         difference () {
@@ -379,14 +372,15 @@ module top1() {
 
     difference () {
         /* upper top */
-        translate(v= [-.3 - sp - 2 * wt, 50.3 - wt, 22.7 - wt]) {
+        translate(v= [-.3 - sp - 2 * wt, 50.3 - wt, 23.7 - wt]) {
             cube(size = [65.9 + 2 * sp + 5 * wt, 40 + sp + 3 * wt, wt], center = false);
         };
         displayhole(5, 24, 5);
     }
+    
     intersection () {
         difference () {
-            translate(v= [-.3 - wt, 50.6 - wt, 19.7 - wt]) {
+            translate(v= [-.3 - wt, 50.6 - wt, 20.7 - wt]) {
                 cube(size = [65.9 + 3 * wt, 40.6 + 3 * wt, wt], center = false);
             };
         displayhole(5, 24, 3);
@@ -394,32 +388,55 @@ module top1() {
         displayhole(5, 24, 5 + wt);
     }
 
-    /* middle wall */
-    translate(v= [-.3 - sp - 2 * wt, 50.3 - wt, 9.4 + dz - wt]) {
-        cube(size = [65.9 + 2 * sp + 5 * wt, wt, 13.3 - dz +  wt], center = false);
-    };
-
-    /* rear wall */
-    translate(v= [-.3 - sp - 2 * wt, 90.3 + wt + sp, -9.3 - wt]) {
-        cube(size = [65.9 + 2 * sp + 5 * wt, wt, 32 + wt], center = false);
-    };
-
-    /* side wall */
+    /* walls */
     difference () {
-        translate(v= [-.3 - sp - 2 * wt, -.3 - 2 * wt - sp , -9.3 - wt]) {
-            cube(size = [65.9 + 2 * sp + 5 * wt, 90.3 + 2 * sp + 4 * wt, 32 + wt], center = false);
-        };
-        translate(v= [-.3 - sp - wt, -1.3 - 2 * wt - sp , -10 - wt]) {
-            cube(size = [65.9 + 2 * sp + 3 * wt, 92.3 + 2 * sp + 4 * wt, 34 + wt], center = false);
-        };
-        translate(v= [-2.3 - sp - 2 * wt, -1 -sp - 2 *  wt, 9.4 + dz]) {
-            cube(size = [69.9 + 2 * sp + 5 * wt, sp + 51.3 + wt , 13.3 - dz +  wt], center = false);
-        };
-        
+        union() {
+            difference () {
+                translate(v= [-.3 - sp - 2 * wt, 50.3 - wt, 9.4 + dz + sp]) {
+                    cube(size = [65.9 + 2 * sp + 5 * wt, 40 + 3 * wt + sp, 14.3 - dz - sp ], center = false);
+                };
+                translate(v= [-.3 - sp - wt, 50.3, 9.4 + dz + sp - wt]) {
+                    cube(size = [65.9 + 2 * sp + 3 * wt, 40 + wt + sp, 14.3 - dz - sp + 3 * wt ], center = false);
+                }
+            }
+
+            difference () {
+                union () {
+                    translate(v= [-.3 - wt, 50.3 + sp, 5 + sp]) {
+                        cube(size = [65.9 + 3 * wt, 40 +  wt - sp, 4.4 + dz + wt ], center = false);
+                    };
+                    translate(v= [-.3 - sp - 2 * wt, 50.3 - wt, 9.4 + dz + sp]) {
+                        cube(size = [65.9 + 2 * sp + 5 * wt, 40 + sp + 3 * wt, wt], center = false);
+                    };
+                };
+                union () {
+                    translate(v= [-.3 , 50.3 + sp + wt, 5 + sp - wt]) {
+                        cube(size = [65.9 + wt, 40 - wt - sp, 14.3 - dz - sp + 3 * wt ], center = false);
+                    };
+                    /* support */
+                    translate(v= [-.3 - sp - 2 * wt, 85.3 - sp , 5 ]) {
+                        cube(size = [65.9 + 2 * sp + 5 * wt, wt + 2 * sp , 4.4 + sp + dz ], center = false);
+                    };
+                }
+            }
+        }
+        translate([0, dy -1.27 + 28 * 2.54, 15.5]) {
+            translate([-10, 2, 0])
+                rotate ([0, 90, 0])
+                    cylinder (r = 4, h = 20, center = false);
+            cube(size = [20, 4, 8], center = true);
+            translate([-10, -2, 0])
+                rotate ([0, 90, 0])
+                    cylinder (r = 4, h = 20, center = false);
+        };    
     }
 }
 
-// device( );
+device( );
+
+color(c = [.5, .8, .5]) {
+    top1();
+}
 
 color(c = [.8, .3, .3]) {
     top2();
